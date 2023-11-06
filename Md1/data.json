@@ -1,0 +1,30 @@
+{
+    "0618260307": {
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "ISBN": "0618260307",
+        "price": 9.99,
+        "quantity": 2
+    },
+    "0743273567": {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "ISBN": "0743273567",
+        "price": 6.99,
+        "quantity": 3
+    },
+    "0684801221": {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "ISBN": "0679783261",
+        "price": 5.99,
+        "quantity": 1
+    },
+    "9780553418026": {
+        "title": "The Martian",
+        "author": "Andy Weir",
+        "ISBN": "9780553418026",
+        "price": 9.99,
+        "quantity": 1
+    }
+}
