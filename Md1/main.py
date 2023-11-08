@@ -6,6 +6,7 @@ from rich.console import Console
 from rich.prompt import Prompt, IntPrompt, FloatPrompt
 from rich.progress import track
 from rich.table import Table
+from rich.rule import Rule
 
 
 class Warehouse:
@@ -16,15 +17,26 @@ class Warehouse:
         Args: 
             file_name (str): The name of the file to use for storing inventory data.
         """
+        # Path is relative to the current file
         self._file_path = os.path.join(os.path.dirname(__file__), file_name)
 
+    def load_data(self) -> bool:
+        """
+        Loads inventory data from a JSON file located at the specified file path.
+        If the file does not exist, an empty inventory is created.
+
+        Returns:
+            bool: True if the data was successfully loaded, False otherwise.
+        """
         if os.path.exists(self._file_path):
             with open(self._file_path, "r") as f:
                 self._inventory = json.load(f)
+            return True
         else:
             self._inventory = {}
+            return False
 
-    def save(self) -> None:
+    def save_data(self) -> None:
         """
         Saves the current inventory to a JSON file at the specified file path.
         """
@@ -182,10 +194,10 @@ class Warehouse:
         Prompts the user to enter a book ISBN and searches for the book in the inventory.
         If the book is found, it is displayed. Otherwise, an error message is displayed.
         """
-        ISBN = IntPrompt.ask("Enter book ISBN", default="0684801221")
-        while ISBN < 0:
-            console.print("[red]ISBN cannot be negative[/red]")
-            ISBN = IntPrompt.ask("Enter book ISBN", default="0684801221")
+        ISBN = Prompt.ask("Enter book ISBN", default="0684801221")
+        while not ISBN.isdigit():
+            console.print("[red]ISBN must contain only digits[/red]")
+            ISBN = Prompt.ask("Enter book ISBN", default="0684801221")
 
         book = self._read_book(ISBN)
         if book:
@@ -215,9 +227,9 @@ class Warehouse:
 
         for book in books:
             table.add_row(str(book["ISBN"]), book["title"], book["author"], str(
-                book["price"]), str(book["quantity"]))
+                f"{book["price"]:.2f}"), str(book["quantity"]))
 
-        # Simulate a long-running search 
+        # Simulate a long-running search
         for _ in track(range(100), description="Searching..."):
             sleep(0.01)
 
@@ -236,20 +248,24 @@ class Warehouse:
 
         for book in self._read_books():
             table.add_row(str(book["ISBN"]), book["title"], book["author"], str(
-                book["price"]), str(book["quantity"]))
+                f"{book["price"]:.2f}"), str(book["quantity"]))
 
         console.print(table)
 
 
 if __name__ == "__main__":
     console = Console()
+    console.clear()
 
     warehouse = Warehouse()
+    if warehouse.load_data():
+        console.print("Inventory loaded from file", style="blue italic")
+    else:
+        console.print("Empty inventory created", style="blue italic")
 
     while True:
-        console.clear()
-
-        menu = Table(title="Book Warehouse Menu")
+        console.print(Rule("Book Inventory", style="blue"))
+        menu = Table(title="Menu")
         menu.add_column("Option", justify="right", style="cyan", no_wrap=True)
         menu.add_column("Description", style="magenta")
 
@@ -264,7 +280,6 @@ if __name__ == "__main__":
 
         choice = Prompt.ask("Enter option", choices=[
                             "1", "2", "3", "4", "5", "6"])
-
         if choice == "1":
             warehouse.add_book()
         elif choice == "2":
@@ -279,11 +294,12 @@ if __name__ == "__main__":
             break
 
         Prompt.ask("Press Enter to continue...")
+        console.clear()
 
     choice = Prompt.ask(
         "Do you want to save the inventory changes in file?", choices=["y", "n"])
     if choice == "y":
-        warehouse.save()
-        console.print("[bold green]Inventory saved![/bold green]")
+        warehouse.save_data()
+        console.print("Inventory saved!", style="green italic")
     else:
-        console.print("[bold red]Inventory not saved![/bold red]")
+        console.print("Inventory not saved!", style="red italic")
