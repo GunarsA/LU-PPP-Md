@@ -155,22 +155,18 @@ class Warehouse:
                 "Enter book quantity", default="100")
 
         if self._create_book(book):
-            console.print(f"Book [bold green] {
-                          book["title"]} [/bold green] added to inventory")
+            console.print(f"Book [bold green] {book["title"]} [/bold green] added to inventory")
         else:
-            console.print(f"Book with ISBN [bold red] {
-                          book['title']} [/bold red] already exists in inventory")
+            console.print(f"Book with ISBN [bold red] {book['title']} [/bold red] already exists in inventory")
 
             choice = Prompt.ask(
                 "Do you want to update the book?", choices=["y", "n"])
 
             if choice == "y":
                 self._update_book(book)
-                console.print(f"Book [bold green] {
-                              book['title']} [/bold green] updated in inventory")
+                console.print(f"Book [bold green] {book['title']} [/bold green] updated in inventory")
             else:
-                console.print(f"Book [bold red] {
-                              book['title']} [/bold red] not updated in inventory")
+                console.print(f"Book [bold red] {book['title']} [/bold red] not updated in inventory")
 
     def remove_book(self) -> None:
         """
@@ -183,11 +179,9 @@ class Warehouse:
             ISBN = Prompt.ask("Enter book ISBN", default="0684801221")
 
         if self._delete_book(ISBN):
-            console.print(f"Book with ISBN [bold green] {
-                          ISBN} [/bold green] removed from inventory")
+            console.print(f"Book with ISBN [bold green] {ISBN} [/bold green] removed from inventory")
         else:
-            console.print(f"Book with ISBN [bold red] {
-                          ISBN} [/bold red] does not exist in inventory")
+            console.print(f"Book with ISBN [bold red] {ISBN} [/bold red] does not exist in inventory")
 
     def search_book(self) -> None:
         """
@@ -204,7 +198,7 @@ class Warehouse:
             console.print(book)
         else:
             console.print(f"Book with ISBN [bold red] {
-                          ISBN} [/bold red] does not exist in inventory")
+                    ISBN} [/bold red] does not exist in inventory")
 
     def search_books(self) -> None:
         """
